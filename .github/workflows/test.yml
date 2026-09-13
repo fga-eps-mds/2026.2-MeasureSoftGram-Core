@@ -32,22 +32,13 @@ jobs:
 
       - name: Corrige reports path
         run: |
-          sed -i 's/<source>\/home\/runner\/work\/2026.1-MeasureSoftGram-Core\/2026.1-MeasureSoftGram-Core<\/source>/<source>\/github\/workspace<\/source>/g' coverage.xml
+          sed -i "s#<source>${GITHUB_WORKSPACE}</source>#<source>/github/workspace</source>#g" coverage.xml
 
       - name: Scanner do SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v2.3.0
+        uses: SonarSource/sonarqube-scan-action@v7
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Envia cobertura para o Codecov
-        uses: codecov/codecov-action@v4.0.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./
-          env_vars: OS,PYTHON
-          fail_ci_if_error: true
-          files: ./coverage.xml
-          flags: unittests
-          name: 2026.1-MeasureSoftGram-Core
-          verbose: true
+          args: >
+            -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.event.repository.name }}
