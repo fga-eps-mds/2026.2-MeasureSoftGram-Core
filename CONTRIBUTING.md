@@ -4,8 +4,8 @@
 
 Antes de enviar uma alteração para este repositório, se já não houver uma issue, crie uma a partir do template, e utilize as tags oferecidas para ajudar na identificação da issue. Certifique-se sobre as nossas políticas:
 
-- [Código de conduta]( https://github.com/fga-eps-mds/2021-2-MeasureSoftGram-Core/blob/main/code_of_conduct.md)
-- [Padrões no Github](https://fga-eps-mds.github.io/2021-2-MeasureSoftGram-Doc/docs/contribute/github_standards)
+- [Código de conduta](code_of_conduct.md)
+- [Guia de Contribuição e Padrões](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/docs/como-contribuir)
 - Critérios de aceitação devidamente cumpridos
 - Testes automatizados para tudo o que for alterado
 
@@ -17,22 +17,8 @@ Crie sua branch para trabalhar, ou faça um fork do repositório, caso seja um d
 
 Crie um pull request no Github, selecionando a branch `develop` como base e a sua branch como comparação.
 
-## Formatação e lint
-
-O código segue o [black](https://black.readthedocs.io/) para formatação e o
-flake8 para o lint. O CI valida os dois: **um PR com código fora do padrão do
-black falha o gate** (`black --check`).
-
-Antes de abrir o PR, formate e verifique localmente:
-
-```bash
-make format   # formata com black (ou: black src tests)
-make lint     # black + flake8 via tox
-```
-
 ## Revisões
 
 Se mudanças forem solicitadas, corrija-as e solicite uma nova revisão.
 
 **Muito obrigado por contribuir!!**
-

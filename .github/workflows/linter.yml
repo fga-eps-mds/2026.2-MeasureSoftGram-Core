@@ -8,6 +8,7 @@ on:
 
 jobs:
   flake8:
+    name: Linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,88 +1,96 @@
-# 2026.1 MeasureSoftGram-Core
+# MeasureSoftGram-Core
 
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=bugs)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2026.1-MeasureSoftGram-Core&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2026.1-MeasureSoftGram-Core)
+## Badges
 
-## What is it?
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=bugs)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_MeasureSoftGram-Core&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_MeasureSoftGram-Core)
 
-The MeasureSoftGram-Core is a software system for continuous quality of product observation and multidimensional use in continuous design engineering software, and is where the innovative mathematical models for software analysis live.
+> **Este README resume o componente Core.** A documentação completa do produto — incluindo arquitetura, uso detalhado e políticas de contribuição — é central e vive no [MeasureSoftGram Docs](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/).
 
-## How to use MeasureSoftGram Core
+## O que é
 
-- [How to use](https://fga-eps-mds.github.io/2026.1-MeasureSoftGram-DOC/docs/artifact/how_to_use)
+O **MeasureSoftGram-Core** (pacote `msgram-core`) é o núcleo matemático do MeasureSoftGram: uma biblioteca Python responsável por calcular o modelo de qualidade de software, subindo de métricas extraídas até o índice final de qualidade (TSQMI), passando por medidas, subcaracterísticas e características.
 
-## How to use
+## Como Executar o Projeto
 
-Core is a Python library (`msgram-core` on PyPI), consumed in-process by the
-Service and the CLI. There is no server to run: install it and import the
-analysis functions.
+Requisitos: **Python 3.10 ou superior**.
+
+### 1. Criar e ativar o ambiente virtual
 
 ```bash
-pip install msgram-core
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-```python
-from resources.analysis import calculate_measures
-```
-
-## How to run tests
-
-Install dependencies:
+### 2. Instalar as dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
-We use `tox` for tests:
+### 3. Usar como biblioteca
+
+```python
+from resources.analysis import calculate_measures
+```
+
+---
+
+## Como Rodar os Testes
 
 ```bash
 pip install tox
 tox
 ```
 
-To run a specific package or file:
+Para rodar um pacote ou arquivo específico:
 
 ```bash
 tox <PACKAGE OR FILE>
 ```
 
-If it doesn't work, try first:
+Se não funcionar, tente instalar antes:
 
 ```bash
 pip install pytest-mock
 ```
 
-## Contribute
+---
 
-Do you want to contribute with our project? Access our [contribution guide](./CONTRIBUTING.md) where we explain how you do it.
+## Documentação
 
-## Code of Conduct
+A documentação oficial e completa é central: **[MeasureSoftGram Docs](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/)**. Este repositório guarda apenas o código do componente e um resumo.
 
-We follow a [Code of Conduct](./CODE_OF_CONDUCT.md) — please read it before contributing.
+## Informações Adicionais
 
-## License
+- **Docker Hub:** [Core](https://hub.docker.com/r/measuresoftgram/core) · [Service](https://hub.docker.com/r/measuresoftgram/service)
+- **Documentação:** [MeasureSoftGram Docs](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/)
+- **Guia de Contribuição:** Veja nosso [Guia de Contribuição](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/docs/como-contribuir) e o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
+- **Demais repositórios do produto:**
+  * [Service](https://github.com/fga-eps-mds/MeasureSoftGram-Service)
+  * [CLI](https://github.com/fga-eps-mds/MeasureSoftGram-CLI)
+  * [Front Web](https://github.com/fga-eps-mds/MeasureSoftGram-Front)
+  * [Action](https://github.com/fga-eps-mds/MeasureSoftGram-Action)
+  * [Parser](https://github.com/fga-eps-mds/MeasureSoftGram-Parser)
+  * [Docs](https://github.com/fga-eps-mds/MeasureSoftGram-Docs)
 
-[GNU AGPL-3.0 License](./LICENSE)
+## Contribuição
 
-## Documentation
+As políticas de contribuição são as mesmas para todos os repositórios do produto e estão em **[Guia de Contribuição e Padrões](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/docs/como-contribuir)**. Consulte também o [CONTRIBUTING.md](./CONTRIBUTING.md) deste repositório.
 
-The documentation of this project can be accessed at: [Documentation](https://github.com/fga-eps-mds/2026.1-MeasureSoftGram-DOC).
+## Código de Conduta
 
-## Another informations
+Este projeto segue o **[Código de Conduta](https://fga-eps-mds.github.io/MeasureSoftGram-Docs/docs/codigo-de-conduta)** do MeasureSoftGram, único para todos os repositórios. Veja também o [code_of_conduct.md](./code_of_conduct.md).
 
-Our services are available on [Docker Hub](https://hub.docker.com/):
-- [Core](https://hub.docker.com/r/measuresoftgram/core)
-- [Service](https://hub.docker.com/r/measuresoftgram/service)
+## Licença
 
-## Wiki
-
-For more information, see our [wiki](https://fga-eps-mds.github.io/2026.1-MeasureSoftGram-DOC/).
+Este projeto é distribuído sob a licença [AGPL-3.0](./LICENSE).
