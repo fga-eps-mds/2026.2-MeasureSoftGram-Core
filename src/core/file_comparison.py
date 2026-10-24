@@ -98,17 +98,19 @@ def compare_file_complexity(previous: dict, current: dict) -> list[dict]:
             for side, files in (("previous", before), ("current", after))
             if path in files and files[path] is None
         ]
+        if path not in before:
+            file_status = "added"
+        elif path not in after:
+            file_status = "removed"
+        else:
+            file_status = "matched"
         rows.append(
             {
                 "path": path,
                 "previous": old,
                 "current": new,
                 "delta": new - old if old is not None and new is not None else None,
-                "file_status": (
-                    "added"
-                    if path not in before
-                    else "removed" if path not in after else "matched"
-                ),
+                "file_status": file_status,
                 "missing_metric": missing,
             }
         )
