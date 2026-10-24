@@ -94,3 +94,9 @@ Este projeto segue o **[Código de Conduta](https://fga-eps-mds.github.io/Measur
 ## Licença
 
 Este projeto é distribuído sob a licença [AGPL-3.0](./LICENSE).
+
+## Experimento US130
+
+A [comparação experimental de complexidade por arquivo](docs/experiments/us130.md)
+inclui evidências do levantamento, fixtures, exemplo executável, testes e limitações.
+
