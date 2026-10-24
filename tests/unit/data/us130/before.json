@@ -1,0 +1,107 @@
+{
+  "_fixture": "SYNTHETIC: illustrative US130 snapshot; not a production collection or a real release.",
+  "paging": {
+    "pageIndex": 1,
+    "pageSize": 500,
+    "total": 9
+  },
+  "baseComponent": {
+    "key": "synthetic-us130",
+    "qualifier": "TRK",
+    "measures": [
+      {
+        "metric": "complexity",
+        "value": "999"
+      }
+    ]
+  },
+  "components": [
+    {
+      "key": "synthetic-us130:src/changed.py",
+      "qualifier": "FIL",
+      "path": "src/changed.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "key": "synthetic-us130:src/unchanged.py",
+      "qualifier": "FIL",
+      "path": "src/unchanged.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "key": "synthetic-us130:src/zero.py",
+      "qualifier": "FIL",
+      "path": "src/zero.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "key": "synthetic-us130:src/removed.py",
+      "qualifier": "FIL",
+      "path": "src/removed.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "key": "synthetic-us130:src/missing_before.py",
+      "qualifier": "FIL",
+      "path": "src/missing_before.py",
+      "measures": []
+    },
+    {
+      "key": "synthetic-us130:src/missing_after.py",
+      "qualifier": "FIL",
+      "path": "src/missing_after.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "key": "synthetic-us130:src/missing_both.py",
+      "qualifier": "FIL",
+      "path": "src/missing_both.py",
+      "measures": []
+    },
+    {
+      "qualifier": "DIR",
+      "path": "src",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "999"
+        }
+      ]
+    },
+    {
+      "qualifier": "UTS",
+      "path": "tests/test_app.py",
+      "measures": [
+        {
+          "metric": "complexity",
+          "value": "999"
+        }
+      ]
+    }
+  ]
+}
