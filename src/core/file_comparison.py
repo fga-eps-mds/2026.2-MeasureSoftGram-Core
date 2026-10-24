@@ -8,6 +8,34 @@ from util.exceptions import InvalidMetricValue
 METRIC = "complexity"
 
 
+def _snapshot_identity(snapshot: dict) -> tuple[str, str | None]:
+    if not isinstance(snapshot, dict):
+        raise ValueError("Expected a raw SonarQube tree object")
+    base = snapshot.get("baseComponent")
+    if not isinstance(base, dict) or not isinstance(base.get("key"), str):
+        raise ValueError("Expected baseComponent.key identifying the SonarQube project")
+    if not base["key"].strip():
+        raise ValueError("SonarQube project key must not be empty")
+    return base["key"], base.get("branch")
+
+
+def _check_paging(snapshot: dict, component_count: int) -> None:
+    if "paging" not in snapshot:
+        return  # Caller must establish completeness when metadata is unavailable.
+    paging = snapshot["paging"]
+    if not isinstance(paging, dict):
+        raise ValueError("Paging must describe a complete single-page snapshot")
+    page, size, total = (
+        paging.get("pageIndex"),
+        paging.get("pageSize"),
+        paging.get("total"),
+    )
+    if any(type(value) is not int for value in (page, size, total)) or (
+        page != 1 or size < 1 or total != component_count or total > size
+    ):
+        raise ValueError("Incomplete or inconsistent paging; supply a complete tree")
+
+
 def _complexity_value(component: dict) -> float | None:
     measures = component.get("measures", [])
     if not isinstance(measures, list) or any(
@@ -31,6 +59,7 @@ def _file_values(snapshot: dict) -> dict[str, float | None]:
     components = snapshot.get("components")
     if not isinstance(components, list):
         raise ValueError("Expected a raw SonarQube tree with a components list")
+    _check_paging(snapshot, len(components))
     files = {}
     for component in components:
         if not isinstance(component, dict):
@@ -52,7 +81,13 @@ def compare_file_complexity(previous: dict, current: dict) -> list[dict]:
     Missing values stay None. File status describes snapshot membership only,
     not verified Git additions/removals or rename detection. Inputs are not mutated.
     This experiment does not calculate measure scores or infer quality changes.
+    Project keys and optional branch metadata must match. Declared partial pages
+    are rejected; without paging the caller must verify collection completeness.
     """
+    if _snapshot_identity(previous) != _snapshot_identity(current):
+        raise ValueError(
+            "Snapshots must have the same SonarQube project key and branch"
+        )
     before = _file_values(previous)
     after = _file_values(current)
     rows = []

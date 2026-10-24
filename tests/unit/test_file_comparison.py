@@ -65,6 +65,7 @@ def test_invalid_metric_is_rejected_instead_of_becoming_zero(snapshots, value):
 
 @pytest.mark.parametrize("side", [0, 1])
 def test_duplicate_paths_are_rejected(snapshots, side):
+    snapshots[side].pop("paging")
     snapshots[side]["components"].append(snapshots[side]["components"][0])
     with pytest.raises(ValueError, match="Duplicate file path"):
         compare_file_complexity(*snapshots)
@@ -74,4 +75,50 @@ def test_duplicate_metric_is_rejected(snapshots):
     measures = snapshots[0]["components"][0]["measures"]
     measures.append(deepcopy(measures[0]))
     with pytest.raises(ValueError, match="Duplicate complexity"):
+        compare_file_complexity(*snapshots)
+
+
+@pytest.mark.parametrize(
+    "field,value", [("key", "another-project"), ("branch", "other")]
+)
+def test_project_or_branch_mismatch_is_rejected(snapshots, field, value):
+    snapshots[1]["baseComponent"][field] = value
+    with pytest.raises(ValueError, match="same SonarQube project key and branch"):
+        compare_file_complexity(*snapshots)
+
+
+@pytest.mark.parametrize(
+    "paging",
+    [
+        None,
+        {},
+        {"pageIndex": 2, "pageSize": 500, "total": 9},
+        {"pageIndex": 1, "pageSize": 500, "total": 501},
+        {"pageIndex": 1, "pageSize": 1, "total": 9},
+        {"pageIndex": True, "pageSize": 500, "total": 9},
+    ],
+)
+def test_incomplete_or_invalid_paging_is_rejected(snapshots, paging):
+    snapshots[1]["paging"] = paging
+    with pytest.raises(ValueError, match="[Pp]aging"):
+        compare_file_complexity(*snapshots)
+
+
+@pytest.mark.parametrize("snapshot", [None, [], {}, {"baseComponent": {"key": " "}}])
+def test_unidentified_snapshot_is_rejected(snapshots, snapshot):
+    with pytest.raises(ValueError):
+        compare_file_complexity(snapshot, snapshots[1])
+
+
+@pytest.mark.parametrize("path", [None, "", "   ", 42])
+def test_file_requires_a_path(snapshots, path):
+    snapshots[0]["components"][0]["path"] = path
+    with pytest.raises(ValueError, match="non-empty path"):
+        compare_file_complexity(*snapshots)
+
+
+@pytest.mark.parametrize("measures", [None, {}, [None]])
+def test_malformed_measures_are_rejected(snapshots, measures):
+    snapshots[0]["components"][0]["measures"] = measures
+    with pytest.raises(ValueError, match="measures must be a list"):
         compare_file_complexity(*snapshots)
