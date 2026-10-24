@@ -122,3 +122,52 @@ def test_malformed_measures_are_rejected(snapshots, measures):
     snapshots[0]["components"][0]["measures"] = measures
     with pytest.raises(ValueError, match="measures must be a list"):
         compare_file_complexity(*snapshots)
+
+
+def test_historical_sonar_fixture_is_read_without_losing_empty_files():
+    snapshot = json.loads(
+        (
+            DATA
+            / "fga-eps-mds-2021-2-MeasureSoftGram-CLI-04-13-2022-02-13-37-v1.1.1.json"
+        ).read_text()
+    )
+    rows = compare_file_complexity(snapshot, snapshot)
+    assert len(rows) == 7
+    by_path = {row["path"]: row for row in rows}
+    assert by_path["src/cli/create.py"]["previous"] == 37.0
+    assert by_path["src/cli/jsonReader.py"]["current"] == 19.0
+    assert by_path["src/__init__.py"]["current"] == 0.0
+    assert all(row["delta"] == 0 and row["file_status"] == "matched" for row in rows)
+
+
+def test_path_change_is_removed_plus_added_even_with_same_component_key(snapshots):
+    snapshots[1]["components"][0]["path"] = "src/renamed.py"
+    rows = {row["path"]: row for row in compare_file_complexity(*snapshots)}
+    assert rows["src/changed.py"]["file_status"] == "removed"
+    assert rows["src/renamed.py"]["file_status"] == "added"
+    assert rows["src/changed.py"]["delta"] is None
+    assert rows["src/renamed.py"]["delta"] is None
+
+
+def test_added_and_removed_files_can_also_have_a_missing_metric(snapshots):
+    for snapshot, path in zip(snapshots, ("src/removed.py", "src/added.py")):
+        component = next(c for c in snapshot["components"] if c.get("path") == path)
+        component.pop("measures")
+    rows = {row["path"]: row for row in compare_file_complexity(*snapshots)}
+    assert rows["src/added.py"]["missing_metric"] == ["current"]
+    assert rows["src/removed.py"]["missing_metric"] == ["previous"]
+
+
+def test_empty_snapshots_and_absent_paging(snapshots):
+    for snapshot in snapshots:
+        snapshot.pop("paging")
+        snapshot["components"] = []
+    assert compare_file_complexity(*snapshots) == []
+
+
+@pytest.mark.parametrize("components", [None, {}, [None]])
+def test_malformed_component_tree_is_rejected(snapshots, components):
+    snapshots[0].pop("paging")
+    snapshots[0]["components"] = components
+    with pytest.raises(ValueError, match="[Cc]omponents"):
+        compare_file_complexity(*snapshots)
