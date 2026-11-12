@@ -28,75 +28,82 @@ def convert_metrics_to_dict(metrics_list):
     return metrics_dict
 
 
+def _load_extracted_measures(extracted_measures):
+    """Valida a entrada como medidas estáticas ou de tempo de execução."""
+    if not CalculateMeasureSchema().validate(extracted_measures):
+        return CalculateMeasureSchema().load(extracted_measures), MEASURE_TYPE.STATIC
+
+    if not CalculateRuntimeMeasureSchema().validate(extracted_measures):
+        return (
+            CalculateRuntimeMeasureSchema().load(extracted_measures),
+            MEASURE_TYPE.RUN_TIME,
+        )
+
+    raise ValidationError("error: Extracted measures are not formatted correctly")
+
+
+def _validate_measure_params(measure_key: str, measure: dict, measure_type):
+    """Carrega a medida pelo schema dela e roda as validações específicas de métricas."""
+    schema = AGGREGATED_NORMALIZED_MEASURES_MAPPING[measure_key]["schema"]()
+
+    try:
+        validated_params = schema.load(data=measure, unknown=INCLUDE)
+        validate_metrics = getattr(schema, "validate_metrics", None)
+        if callable(validate_metrics):
+            validate_metrics(
+                validated_params["metrics"]
+                if measure_type == MEASURE_TYPE.STATIC
+                else validated_params
+            )
+    except ValidationError as exc:
+        raise ValidationError(
+            f"error: Metrics in {measure_key} are not valid.\nschema_errors: {exc.messages}"
+        )
+
+    if measure_type == MEASURE_TYPE.STATIC:
+        return convert_metrics_to_dict(validated_params["metrics"])
+    return validated_params
+
+
+def _threshold_config(config: dict, measure_key: str) -> dict:
+    """Limites (min_threshold e max_threshold) que a configuração define para a medida."""
+    return {
+        key: value
+        for characteristic in config["characteristics"]
+        for subcharacteristic in characteristic["subcharacteristics"]
+        for measure in subcharacteristic["measures"]
+        if measure["key"] == measure_key
+        for key, value in measure.items()
+        if key in ("min_threshold", "max_threshold")
+    }
+
+
 def calculate_measures(
     extracted_measures: CalculateMeasureSchema | CalculateRuntimeMeasureSchema,
     config: dict = {
         "characteristics": [{"subcharacteristics": [{"measures": [{"key": ""}]}]}]
     },
 ):
-    # Validate if outter keys is valid
-    if not CalculateMeasureSchema().validate(extracted_measures):
-        data = CalculateMeasureSchema().load(extracted_measures)
-        measure_type = MEASURE_TYPE.STATIC
-
-    elif not CalculateRuntimeMeasureSchema().validate(extracted_measures):
-        data = CalculateRuntimeMeasureSchema().load(extracted_measures)
-        measure_type = MEASURE_TYPE.RUN_TIME
-
-    else:
-        raise ValidationError("error: Extracted measures are not formatted correctly")
+    data, measure_type = _load_extracted_measures(extracted_measures)
 
     # Objeto retornado em caso de sucesso
     result_data = {"measures": []}
 
-    valid_measures = AGGREGATED_NORMALIZED_MEASURES_MAPPING.keys()
-
     for measure in data["measures"]:
         measure_key: str = measure["key"]
 
-        if measure_key not in valid_measures:
+        if measure_key not in AGGREGATED_NORMALIZED_MEASURES_MAPPING:
             raise MeasureKeyNotSupported(f"Measure {measure_key} is not supported")
 
-        schema = AGGREGATED_NORMALIZED_MEASURES_MAPPING[measure_key]["schema"]
-
-        try:
-            validated_params = schema().load(data=measure, unknown=INCLUDE)
-            # Se o schema da medida tem validações específicas para alguma métrica
-            if hasattr(schema(), "validate_metrics") and callable(
-                getattr(schema(), "validate_metrics")
-            ):
-                if measure_type == MEASURE_TYPE.STATIC:
-                    schema().validate_metrics(validated_params["metrics"])
-                else:
-                    schema().validate_metrics(validated_params)
-        except ValidationError as exc:
-            raise ValidationError(
-                f"error: Metrics in {measure_key} are not valid.\nschema_errors: {exc.messages}"
-            )
+        validated_params = _validate_measure_params(measure_key, measure, measure_type)
 
         aggregated_normalized_measure = AGGREGATED_NORMALIZED_MEASURES_MAPPING[
             measure_key
         ]["aggregated_normalized_measure"]
 
-        measures = [
-            measure
-            for characteristic in config["characteristics"]
-            for subcharacteristic in characteristic["subcharacteristics"]
-            for measure in subcharacteristic["measures"]
-        ]
-
-        threshold_config = {
-            key: value
-            for measure in measures
-            for key, value in measure.items()
-            if measure["key"] == measure_key
-            and ("min_threshold" == key or "max_threshold" == key)
-        }
-
-        if measure_type == MEASURE_TYPE.STATIC:
-            validated_params = convert_metrics_to_dict(validated_params["metrics"])
-
-        result = aggregated_normalized_measure(validated_params, **threshold_config)
+        result = aggregated_normalized_measure(
+            validated_params, **_threshold_config(config, measure_key)
+        )
 
         result_data["measures"].append(
             {
