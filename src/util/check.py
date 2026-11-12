@@ -63,13 +63,8 @@ class Checker:
         if max_threshold != 100:
             raise InvalidThresholdValue("max_threshold is not equal to 100")
 
-    @staticmethod
-    def check_fast_test_builds_threshold(min_threshold: float, max_threshold: float):
-        if min_threshold != 0:
-            raise InvalidThresholdValue(MIN_THRESHOLD_NOT_ZERO)
-
-        if min_threshold >= max_threshold:
-            raise InvalidThresholdValue(MIN_THRESHOLD_NOT_LESS_THAN_MAX)
+    # Mesmas regras da non_complex_files_density: mínimo 0 e menor que o máximo.
+    check_fast_test_builds_threshold = check_non_complex_files_density_threshold
 
     @staticmethod
     def check_passed_tests_threshold(min_threshold: float, max_threshold: float):

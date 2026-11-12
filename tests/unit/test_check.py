@@ -69,3 +69,19 @@ def test_limites_fixos_das_medidas_de_processo(medida, minimo, maximo, mensagem)
 )
 def test_limites_validos_das_medidas_de_processo(medida, minimo, maximo):
     Checker.check_threshold(minimo, maximo, medida)
+
+
+@pytest.mark.parametrize(
+    "minimo, maximo, mensagem",
+    [
+        (1, 10, "min_threshold is not equal to 0"),
+        (0, 0, "min_threshold is greater or equal to max_threshold"),
+    ],
+)
+def test_fast_test_builds_segue_as_regras_da_non_complex_files_density(
+    minimo, maximo, mensagem
+):
+    with pytest.raises(InvalidThresholdValue, match=mensagem):
+        Checker.check_threshold(minimo, maximo, "fast_test_builds")
+
+    Checker.check_threshold(0, 300000, "fast_test_builds")
