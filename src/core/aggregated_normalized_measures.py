@@ -14,6 +14,20 @@ from util.run_time_data_operations import RunTimeDataOperations
 NO_BUILDS_NEUTRAL_SCORE = 0.5
 
 
+def _as_metric_list(metric_values):
+    """
+    Garante que uma metrica por arquivo chegue as medidas como lista.
+
+    `analysis.convert_metrics_to_dict` colapsa metrica de valor unico em
+    escalar, o que acontece em projeto de um unico arquivo analisado. Sem essa
+    normalizacao, `Checker.check_metric_values` recusaria o escalar e a medida
+    quebraria em vez de ser calculada.
+    """
+    if isinstance(metric_values, (list, np.ndarray)):
+        return metric_values
+    return [metric_values]
+
+
 def non_complex_files_density(
     data_frame,
     min_threshold: float = 0,
@@ -489,7 +503,7 @@ def security_rating_measure(
     This function gets the dataframe metrics
     and returns the security rating measure (em9).
     """
-    security_rating = data_frame["security_rating"]
+    security_rating = _as_metric_list(data_frame["security_rating"])
 
     Checker.check_metric_values(security_rating, "security_rating")
 
@@ -529,7 +543,7 @@ def security_review_rating_measure(
     This function gets the dataframe metrics
     and returns the security review rating measure (em10).
     """
-    security_review_rating = data_frame["security_review_rating"]
+    security_review_rating = _as_metric_list(data_frame["security_review_rating"])
 
     Checker.check_metric_values(security_review_rating, "security_review_rating")
 
@@ -571,8 +585,8 @@ def absence_of_vulnerabilities(
     This function gets the dataframe metrics
     and returns the absence of vulnerabilities measure (em11).
     """
-    vulnerabilities = data_frame["vulnerabilities"]
-    ncloc = data_frame["ncloc"]
+    vulnerabilities = _as_metric_list(data_frame["vulnerabilities"])
+    ncloc = _as_metric_list(data_frame["ncloc"])
 
     Checker.check_metric_values(vulnerabilities, "vulnerabilities")
     Checker.check_metric_values(ncloc, "ncloc")
