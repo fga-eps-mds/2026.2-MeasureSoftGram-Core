@@ -142,3 +142,59 @@ class Checker:
 
         if max_threshold != 900:
             raise InvalidThresholdValue("max_threshold is not equal to 900")
+
+    @staticmethod
+    def _check_rating_threshold(min_threshold: float, max_threshold: float):
+        """
+        SonarQube ratings are measured on a 1 (best) to 5 (worst) scale, so any
+        reference value outside that range would normalize to a constant.
+        """
+        if min_threshold < 1:
+            raise InvalidThresholdValue("min_threshold is lesser than 1")
+
+        if min_threshold >= max_threshold:
+            raise InvalidThresholdValue(
+                "min_threshold is greater or equal to max_threshold"
+            )
+
+        if max_threshold > 5:
+            raise InvalidThresholdValue("max_threshold is greater than 5")
+
+    @staticmethod
+    def check_security_rating_measure_threshold(
+        min_threshold: float, max_threshold: float
+    ):
+        Checker._check_rating_threshold(min_threshold, max_threshold)
+
+    @staticmethod
+    def check_security_review_rating_measure_threshold(
+        min_threshold: float, max_threshold: float
+    ):
+        Checker._check_rating_threshold(min_threshold, max_threshold)
+
+    @staticmethod
+    def check_absence_of_vulnerabilities_threshold(
+        min_threshold: float, max_threshold: float
+    ):
+        if min_threshold < 0:
+            raise InvalidThresholdValue("min_threshold is lesser than 0")
+
+        if min_threshold >= max_threshold:
+            raise InvalidThresholdValue(
+                "min_threshold is greater or equal to max_threshold"
+            )
+
+    @staticmethod
+    def check_security_alerts_resolution_threshold(
+        min_threshold: float, max_threshold: float
+    ):
+        if min_threshold < 0:
+            raise InvalidThresholdValue("min_threshold is lesser than 0")
+
+        if min_threshold >= max_threshold:
+            raise InvalidThresholdValue(
+                "min_threshold is greater or equal to max_threshold"
+            )
+
+        if max_threshold > 100:
+            raise InvalidThresholdValue("max_threshold is greater than 100")
