@@ -266,10 +266,7 @@ def _get_security_rating(data: dict, metric: str):
 
     number_of_files = data.get("number_of_files", len(ratings))
 
-    has_none = ratings is None
-    has_zero = len(ratings) == 0
-
-    if has_none or has_zero:
+    if len(ratings) == 0:
         return 0
 
     if (np.array(ratings) < 0).any():
@@ -327,10 +324,7 @@ def get_absence_of_vulnerabilities(data: dict):
 
     number_of_files = data.get("number_of_files", len(vulnerabilities))
 
-    has_none = vulnerabilities is None or ncloc is None
-    has_zero = len(vulnerabilities) == 0 or len(ncloc) == 0
-
-    if has_none or has_zero:
+    if len(vulnerabilities) == 0:
         return 0
 
     vulnerabilities = np.array(vulnerabilities, dtype=np.float64)
