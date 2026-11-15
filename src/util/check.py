@@ -144,57 +144,44 @@ class Checker:
             raise InvalidThresholdValue("max_threshold is not equal to 900")
 
     @staticmethod
-    def _check_rating_threshold(min_threshold: float, max_threshold: float):
+    def _check_scale_threshold(
+        min_threshold: float,
+        max_threshold: float,
+        lowest: float,
+        highest: float | None = None,
+    ):
         """
-        SonarQube ratings are measured on a 1 (best) to 5 (worst) scale, so any
-        reference value outside that range would normalize to a constant.
+        Validates reference values that can be adjusted anywhere inside the scale
+        of the metric, from `lowest` up to `highest` (open when None).
         """
-        if min_threshold < 1:
-            raise InvalidThresholdValue("min_threshold is lesser than 1")
+        if min_threshold < lowest:
+            raise InvalidThresholdValue(f"min_threshold is lesser than {lowest}")
 
         if min_threshold >= max_threshold:
             raise InvalidThresholdValue(
                 "min_threshold is greater or equal to max_threshold"
             )
 
-        if max_threshold > 5:
-            raise InvalidThresholdValue("max_threshold is greater than 5")
+        if highest is not None and max_threshold > highest:
+            raise InvalidThresholdValue(f"max_threshold is greater than {highest}")
 
     @staticmethod
     def check_security_rating_measure_threshold(
         min_threshold: float, max_threshold: float
     ):
-        Checker._check_rating_threshold(min_threshold, max_threshold)
+        Checker._check_scale_threshold(min_threshold, max_threshold, 1, 5)
 
     @staticmethod
     def check_security_review_rating_measure_threshold(
         min_threshold: float, max_threshold: float
     ):
-        Checker._check_rating_threshold(min_threshold, max_threshold)
+        Checker._check_scale_threshold(min_threshold, max_threshold, 1, 5)
 
     @staticmethod
     def check_absence_of_vulnerabilities_threshold(
         min_threshold: float, max_threshold: float
     ):
-        if min_threshold < 0:
-            raise InvalidThresholdValue("min_threshold is lesser than 0")
+        Checker._check_scale_threshold(min_threshold, max_threshold, 0)
 
-        if min_threshold >= max_threshold:
-            raise InvalidThresholdValue(
-                "min_threshold is greater or equal to max_threshold"
-            )
-
-    @staticmethod
-    def check_security_alerts_resolution_threshold(
-        min_threshold: float, max_threshold: float
-    ):
-        if min_threshold < 0:
-            raise InvalidThresholdValue("min_threshold is lesser than 0")
-
-        if min_threshold >= max_threshold:
-            raise InvalidThresholdValue(
-                "min_threshold is greater or equal to max_threshold"
-            )
-
-        if max_threshold > 100:
-            raise InvalidThresholdValue("max_threshold is greater than 100")
+    # Mesmas regras da comment_files_density: percentual com minimo 0 e maximo 100.
+    check_security_alerts_resolution_threshold = check_comment_files_density_threshold

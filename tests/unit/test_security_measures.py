@@ -368,6 +368,18 @@ def test_security_thresholds_accept_adjusted_reference_values(
         ),
         (
             "security_alerts_resolution",
+            -1,
+            100,
+            "min_threshold is lesser than 0",
+        ),
+        (
+            "security_alerts_resolution",
+            80,
+            80,
+            "min_threshold is greater or equal to max_threshold",
+        ),
+        (
+            "security_alerts_resolution",
             45,
             101,
             "max_threshold is greater than 100",
