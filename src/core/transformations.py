@@ -28,7 +28,7 @@ def interpretation_function(
     elif gain_interpretation == GainInterpretation.NEGATIVE_SLOPE:
         return 1 - x
     else:
-        InvalidGainInterpretationValue(
+        raise InvalidGainInterpretationValue(
             f"Gain Interpretation need be 1 or -1, but received {gain_interpretation}"
         )
 
