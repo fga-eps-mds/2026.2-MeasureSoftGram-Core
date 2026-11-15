@@ -442,18 +442,25 @@ def test_security_schemas_reject_foreign_metrics(schema):
     metrics = [{"key": "coverage", "value": [80.0]}]
 
     with pytest.raises(ValidationError) as error:
-        schema().validate_metrics(metrics)
+        schema.validate_metrics(metrics)
 
     assert "Métrica não presente na medida" in str(error.value)
 
 
-def test_security_alerts_resolution_schema_requires_a_single_float():
-    metrics = [{"key": "security_alerts_open", "value": [1.0, 2.0]}]
+@pytest.mark.parametrize(
+    "value,error_msg",
+    [
+        ([1.0, 2.0], "array de um único valor"),
+        ([1], "valor flutuante"),
+    ],
+)
+def test_security_alerts_resolution_schema_requires_a_single_float(value, error_msg):
+    metrics = [{"key": "security_alerts_open", "value": value}]
 
     with pytest.raises(ValidationError) as error:
-        SecurityAlertsResolutionSchema().validate_metrics(metrics)
+        SecurityAlertsResolutionSchema.validate_metrics(metrics)
 
-    assert "array de um único valor" in str(error.value)
+    assert error_msg in str(error.value)
 
 
 # --------------------------------------------------------------------------
