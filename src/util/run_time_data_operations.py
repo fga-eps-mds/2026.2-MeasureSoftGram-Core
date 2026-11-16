@@ -29,6 +29,12 @@ class RunTimeDataOperations:
         release_1_endpoint_calls: pd.DataFrame,
         release_2_endpoint_calls: pd.DataFrame,
     ):
+        """Tira as amostras atípicas de chamadas de endpoint das duas releases.
+
+        Uma amostra atípica em qualquer das releases sai dos quatro DataFrames, que
+        são devolvidos novos e reindexados, na mesma ordem dos parâmetros. Os
+        DataFrames recebidos não são alterados.
+        """
         outliers_indexes = list(
             set(
                 [
@@ -38,17 +44,15 @@ class RunTimeDataOperations:
             )
         )
 
-        release_1_metrics.drop(outliers_indexes, inplace=True)
-        release_1_metrics.reset_index(drop=True, inplace=True)
-
-        release_2_metrics.drop(outliers_indexes, inplace=True)
-        release_2_metrics.reset_index(drop=True, inplace=True)
-
-        release_1_endpoint_calls.drop(outliers_indexes, inplace=True)
-        release_1_endpoint_calls.reset_index(drop=True, inplace=True)
-
-        release_2_endpoint_calls.drop(outliers_indexes, inplace=True)
-        release_2_endpoint_calls.reset_index(drop=True, inplace=True)
+        return tuple(
+            dataframe.drop(outliers_indexes).reset_index(drop=True)
+            for dataframe in (
+                release_1_metrics,
+                release_2_metrics,
+                release_1_endpoint_calls,
+                release_2_endpoint_calls,
+            )
+        )
 
     def get_random_forest(self, endpoint_calls, metrics):
         random_forest = RandomForestRegressor(random_state=0)
