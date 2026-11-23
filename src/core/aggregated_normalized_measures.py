@@ -440,7 +440,12 @@ def run_time_measure(
     release_2_metrics = pd.DataFrame(release_2["metrics"], columns=["metrics"])
     release_2_endpoint_calls = pd.DataFrame(release_2["endpoint_calls"])
 
-    runTimeDataOperations.remove_outliers(
+    (
+        release_1_metrics,
+        release_2_metrics,
+        release_1_endpoint_calls,
+        release_2_endpoint_calls,
+    ) = runTimeDataOperations.remove_outliers(
         release_1_metrics,
         release_2_metrics,
         release_1_endpoint_calls,
