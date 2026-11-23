@@ -1,5 +1,11 @@
 import pytest
-from core.transformations import correlation_function, diff, norm_diff
+from core.transformations import (
+    GainInterpretation,
+    correlation_function,
+    diff,
+    interpretation_function,
+    norm_diff,
+)
 from tests.utils.transformations_data import (
     EXAMPLE_7_RD,
     EXAMPLE_7_RD_CORR,
@@ -10,6 +16,7 @@ from tests.utils.transformations_data import (
     VALID_DIFF_DATA,
 )
 from util.exceptions import (
+    InvalidGainInterpretationValue,
     InvalidReleaseMatrix,
     ReleasePlannedAndDevelopedOfDifferentSizes,
 )
@@ -107,3 +114,37 @@ def test_correlation_function_invalid_release_matrix(rd, error_msg):
     with pytest.raises(InvalidReleaseMatrix) as error:
         correlation_function(np.array(rd))
     assert str(error.value) == error_msg
+
+
+@pytest.mark.parametrize(
+    "x,gain_interpretation,expected",
+    [
+        (0.5, 1, 0.5),
+        (0.2, -1, 0.8),
+        (0.2, GainInterpretation.POSITIVE_SLOPE, 0.2),
+        (0.2, GainInterpretation.NEGATIVE_SLOPE, 0.8),
+        (np.array([0.0, 0.25, 1.0]), -1, [1.0, 0.75, 0.0]),
+    ],
+)
+def test_interpretation_function_valid_gain(x, gain_interpretation, expected):
+    result = interpretation_function(
+        x=x,
+        min_threshold=0,
+        max_threshold=1,
+        gain_interpretation=gain_interpretation,
+    )
+    assert np.allclose(result, expected)
+
+
+@pytest.mark.parametrize("gain_interpretation", [0, 2, -2, None, "1"])
+def test_interpretation_function_invalid_gain(gain_interpretation):
+    with pytest.raises(InvalidGainInterpretationValue) as error:
+        interpretation_function(
+            x=0.5,
+            min_threshold=0,
+            max_threshold=1,
+            gain_interpretation=gain_interpretation,
+        )
+    assert str(error.value) == (
+        f"Gain Interpretation need be 1 or -1, but received {gain_interpretation}"
+    )
